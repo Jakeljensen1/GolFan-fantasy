@@ -1,0 +1,89 @@
+/* --- GLOBAL GOLF THEME COLORS --- */
+:root {
+  --golf-green: #2e7d32;
+  /* deep fairway green */
+  --golf-green-light: #4caf50;
+  /* lighter putting green */
+  --golf-rough: #1b5e20;
+  /* darker rough green */
+  --golf-sand: #f4e7c5;
+  /* bunker sand */
+  --golf-sky: #e8f5e9;
+  /* soft sky greenish-white */
+  --golf-text-dark: #1a1a1a;
+  --golf-text-light: #ffffff;
+}
+
+/* --- PAGE CONTAINER --- */
+.auth-container {
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 40px;
+  background: var(--golf-sky);
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  font-family: system-ui, sans-serif;
+  border: 2px solid var(--golf-green-light);
+}
+
+/* --- TITLE --- */
+.auth-title {
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--golf-green);
+  letter-spacing: 0.5px;
+}
+
+/* --- FORM LAYOUT --- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* --- INPUTS --- */
+.auth-input {
+  padding: 14px 16px;
+  border: 2px solid var(--golf-green-light);
+  border-radius: 10px;
+  font-size: 16px;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-input:focus {
+  border-color: var(--golf-green);
+  box-shadow: 0 0 6px rgba(46, 125, 50, 0.4);
+  outline: none;
+}
+
+/* --- BUTTON --- */
+.auth-button {
+  padding: 14px;
+  background: var(--golf-green);
+  color: var(--golf-text-light);
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.auth-button:hover {
+  background: var(--golf-green-light);
+  transform: translateY(-2px);
+}
+
+/* --- ERROR MESSAGE --- */
+.auth-error {
+  background: #ffe6e6;
+  color: #b30000;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  text-align: center;
+  border: 1px solid #ffb3b3;
+}
