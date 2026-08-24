@@ -34,7 +34,7 @@ const SignupPage = () => {
     }
 
     localStorage.setItem("token", data.token);
-    window.location.href = "/Dashboard"; // temporary redirect
+    window.location.href = "/login"; // temporary redirect
   }
 
   return (
