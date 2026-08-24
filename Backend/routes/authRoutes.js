@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { authMiddleware } = require('../middleware/authMiddleware');
 const authController = require('../controllers/authControllers');
 
 const router = Router();
@@ -13,6 +14,6 @@ router.post('/signup', authController.signup_post);
 router.post('/login', authController.login_post);
 
 // is user logged in?
-router.get('/user', authController.user_get);
+router.get('/user', authMiddleware, authController.user_get);
 
 module.exports = router;

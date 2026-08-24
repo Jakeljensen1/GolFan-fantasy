@@ -1,11 +1,16 @@
 // Use of .env
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
-const authRoutes = require('./routes/authRoutes');
+const connectDb = require('./config/db');
 
-//Set up express app
+//Routes
+const authRoutes = require('./routes/authRoutes');
+const golferRoutes = require('./routes/golferRoutes');
+const tournamentRoutes = require('./routes/tournamentRoutes');
+const lineupRoutes = require('./routes/lineupRoutes')
+
+//Set up express app/port
 const app = express()
 const port = 3000
 
@@ -17,12 +22,7 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true })); // Vite d
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // instead of express-body-parser
 
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGODB_PW}@golfan.ahkl3nj.mongodb.net/?appName=golfan`)
-  .then(() => {
-    app.listen(port)
-    console.log('MongoDB connected, listening on port 3000!')
-  })
-  .catch(err => console.log(err));
+connectDb();
 
 // going to use REST api for my registration/login routes
 app.get('/api', (req, res) => {
@@ -30,3 +30,10 @@ app.get('/api', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes);
+app.use('/api/golfers', golferRoutes);
+app.use('/api/tournaments', tournamentRoutes);
+app.use('/api/lineups', lineupRoutes);
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});

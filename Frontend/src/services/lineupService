@@ -1,0 +1,26 @@
+import { apiRequest } from "./api";
+
+// CREATE lineup
+export const createLineup = async (tournamentId, golferIds) => {
+  return apiRequest(
+    "/lineups",
+    "POST",
+    { tournament: tournamentId, golfers: golferIds },
+    true
+  );
+};
+
+// GET lineup by ID
+export const getLineup = async (id) => {
+  return apiRequest(`/lineups/${id}`, "GET", null, true);
+};
+
+// GET all lineups for logged-in user
+export const getUserLineups = async () => {
+  return apiRequest("/lineups/user/all", "GET", null, true);
+};
+
+// COMPUTE lineup score
+export const computeLineupScore = async (id) => {
+  return apiRequest(`/lineups/${id}/compute-score`, "POST", null, true);
+};

@@ -20,17 +20,18 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true }); //automatically adds created/update at time
 
-// Save user to DB
-userSchema.post('save', function (doc) {
-  console.log('New user was created & saved', doc);
-  // modern mongoose doesn't require next()
-})
-
 // Add hashed password
 userSchema.pre('save', async function () {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt)
 });
+
+
+// Save user to DB
+userSchema.post('save', function (doc) {
+  console.log('New user was created & saved', doc);
+  // modern mongoose doesn't require next()
+})
 
 // static method to login user
 userSchema.statics.login = async function (email, password) {

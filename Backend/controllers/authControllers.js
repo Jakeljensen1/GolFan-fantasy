@@ -1,7 +1,10 @@
 const express = require('express');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const { error } = require('node:console');
+
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
 
 // handle errors
 const handleErrors = (err) => {
@@ -44,11 +47,7 @@ module.exports.signup_post = async (req, res) => {
     const user = await User.create({ email, password, name });
 
     // Create JWT
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1d' }
-    );
+    const token = createToken(user._id);
 
     // Send JSON back to React, so React can use/disply data
     res.status(201).json({
@@ -62,7 +61,8 @@ module.exports.signup_post = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    const errors = handleErrors(err);
+    res.status(400).json({ errors });
   }
 };
 
@@ -73,10 +73,18 @@ module.exports.login_post = async (req, res) => {
   try {
     const user = await User.login(email, password) // static method attached to User model
     const token = createToken(user._id) // MongoDB -> "_id"
-    res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000 });// 1hr 
-    res.status(200).json({ user: user._id })
+
+    res.status(200).json({
+      message: 'Logged in successfully',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name
+      }
+    })
   } catch (err) {
-    const errors = handleErrors(error);
+    const errors = handleErrors(err);
     res.status(400).json({ errors });
   }
 }
