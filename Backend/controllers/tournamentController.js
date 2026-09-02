@@ -1,43 +1,51 @@
 const Tournament = require('../models/Tournament');
+const TournamentEntry = require("../models/TournamentEntry");
+const TournamentResult = require("../models/TournamentResult");
 
 // GET all tournaments
-module.exports.getTournaments = async (req, res) => {
+exports.getTournaments = async (req, res) => {
   try {
-    const tournaments = await Tournament.find().populate('golfers');
+    const tournaments = await Tournament.find().sort({ startDate: 1 });
     res.json(tournaments);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch tournaments' });
+    res.status(500).json({ error: "Failed to fetch tournaments" });
   }
 };
 
 // GET tournament by ID
-module.exports.getTournamentById = async (req, res) => {
+exports.getTournamentById = async (req, res) => {
   try {
-    const tournament = await Tournament.findById(req.params.id)
-      .populate('golfers');
-
-    if (!tournament) {
-      return res.status(404).json({ error: 'Tournament not found' });
-    }
+    const tournament = await Tournament.findById(req.params.id);
+    if (!tournament) return res.status(404).json({ error: "Tournament not found" });
 
     res.json(tournament);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch tournament' });
+    res.status(500).json({ error: "Failed to fetch tournament" });
   }
 };
 
-// get golfers for a specific tournament
-module.exports.getTournamentGolfers = async (req, res) => {
+// GET tournament field (TournamentEntry)
+exports.getTournamentField = async (req, res) => {
   try {
-    const tournament = await Tournament.findById(req.params.id)
-      .populate('golfers');
+    const entries = await TournamentEntry.find({
+      tournamentId: req.params.id
+    }).populate("golferId");
 
-    if (!tournament) {
-      return res.status(404).json({ error: 'Tournament not found' });
-    }
-
-    res.json(tournament.golfers);
+    res.json(entries);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to load tournament golfers' });
+    res.status(500).json({ error: "Failed to fetch tournament field" });
+  }
+};
+
+// GET tournament results (final standings)
+exports.getTournamentResults = async (req, res) => {
+  try {
+    const results = await TournamentResult.find({
+      tournamentId: req.params.id
+    }).populate("golferId");
+
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch tournament results" });
   }
 };

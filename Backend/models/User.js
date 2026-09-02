@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter a password'],
     minlength: [8, 'Minimum password length is 8 chars']
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
   }
 }, { timestamps: true }); //automatically adds created/update at time
 

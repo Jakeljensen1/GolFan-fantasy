@@ -1,25 +1,29 @@
-import { apiRequest } from "./api";
+import axios from "axios";
 
-// Signup
-export const signup = async (name, email, password) => {
-  const data = await apiRequest("/auth/signup", "POST", { name, email, password });
-  localStorage.setItem("token", data.token);
-  return data.user;
-};
+const API = axios.create({
+  baseURL: "http://localhost:3000/api",
+  withCredentials: true
+});
 
-// Login
-export const login = async (email, password) => {
-  const data = await apiRequest("/auth/login", "POST", { email, password });
-  localStorage.setItem("token", data.token);
-  return data.user;
-};
+export async function signup(name, email, password) {
+  const res = await API.post("/auth/signup", { name, email, password });
+  return res.data;
+}
 
-// GET logged in user
-export const getLoggedInUser = async () => {
-  return apiRequest("/auth/user", "GET", null, true);
-};
+export async function login(email, password) {
+  const res = await API.post("/auth/login", { email, password });
+  return res.data;
+}
 
-// Logout
-export const logout = () => {
-  localStorage.removeItem("token");
-};
+export async function logout() {
+  const res = await API.post("/auth/logout");
+  return res.data;
+}
+
+export async function getLoggedInUser() {
+  const res = await API.get("/auth/user");
+  return res.data;
+}
+
+
+

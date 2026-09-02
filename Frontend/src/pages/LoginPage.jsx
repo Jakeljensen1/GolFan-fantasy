@@ -1,6 +1,12 @@
-import { useState } from "react";
 
-const LoginPage = () => {
+import { useState } from "react";
+import { login } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+
+export default function LoginPage() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -9,30 +15,17 @@ const LoginPage = () => {
   const [error, setError] = useState("");
 
   function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const res = await fetch("http://localhost:3000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data.error);
-      return;
+    try {
+      await login(form.email, form.password);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message);
     }
-
-    localStorage.setItem("token", data.token);
-    window.location.href = "/Dashboard"; // temporary redirect
   };
 
   return (
@@ -42,32 +35,30 @@ const LoginPage = () => {
       {error && <p className="auth-error">{error}</p>}
 
       <form onSubmit={handleSubmit} className="auth-form">
-        <label htmlFor="email">Email:</label>
+        <label>Email:</label>
         <input
           type="text"
           name="email"
           className="auth-input"
           value={form.email}
           onChange={handleChange}
-          autoComplete="email"
         />
 
-        <label htmlFor="password">Password:</label>
+        <label>Password:</label>
         <input
           type="password"
           name="password"
           className="auth-input"
           value={form.password}
           onChange={handleChange}
-          autoComplete="current-password"
         />
 
         <button type="submit" className="auth-button">
           Log In
         </button>
       </form>
+      <Footer />
     </div>
   );
-};
+}
 
-export default LoginPage;

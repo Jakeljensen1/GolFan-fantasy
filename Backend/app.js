@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDb = require('./config/db');
+const cookieParser = require("cookie-parser");
 
 //Routes
 const authRoutes = require('./routes/authRoutes');
@@ -20,6 +21,7 @@ const port = 3000
 //Middleware
 app.use(cors({ origin: 'http://localhost:5173', credentials: true })); // Vite default port 5173
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // instead of express-body-parser
 
 connectDb();

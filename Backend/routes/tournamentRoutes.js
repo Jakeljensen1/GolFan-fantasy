@@ -8,6 +8,7 @@ const router = Router();
 // read only routes
 router.get('/', tournamentController.getTournaments);
 router.get('/:id', tournamentController.getTournamentById);
-router.get('/:id/golfers', tournamentController.getTournamentGolfers);
+router.get('/:id/field', tournamentController.getTournamentField);
+router.get('/:id/results', tournamentController.getTournamentResults);
 
 module.exports = router;

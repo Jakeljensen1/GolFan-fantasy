@@ -1,27 +1,43 @@
-// src/models/Golfer.js
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const golferSchema = new mongoose.Schema(
   {
+    externalId: {
+      Type: String
+    },
     name: {
       type: String,
       required: true,
+    },
+    firstName: {
+      type: String,
+      required: true
+    },
+    lastName: {
+      type: String,
+      required: true
     },
     country: {
       type: String,
       required: true,
     },
-    pgaId: { // Help us with data later
-      type: Number,
-      required: true,
-      unique: true,
+    countryCode: {
+      type: String
     },
     worldRanking: {
       type: Number,
       default: null,
     },
-  },
-  { timestamps: true }
+    imageUrl: {
+      type: String
+    },
+    active: {
+      type: Boolean
+    },
+    tours: [
+      String // ["PGA", "DPWT"]
+    ]
+  }, { timestamps: true }
 );
 
-export default mongoose.model("Golfer", golferSchema);
+module.exports = mongoose.model("Golfer", golferSchema);

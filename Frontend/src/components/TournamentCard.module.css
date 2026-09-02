@@ -1,0 +1,31 @@
+/* TournamentCard.module.css */
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  background: white;
+  border: 2px solid var(--golf-green-light);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, background 0.15s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  background: var(--golf-green-light);
+  color: var(--golf-text-light);
+  transform: translateY(-4px);
+}
+
+.name {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.course {
+  opacity: 0.9;
+}

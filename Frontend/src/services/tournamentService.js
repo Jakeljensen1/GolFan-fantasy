@@ -1,13 +1,31 @@
-import { apiRequest } from "./api";
+import axios from "axios";
 
-export const getTournaments = async () => {
-  return apiRequest("/tournaments", "GET");
-};
+const API = axios.create({
+  baseURL: "http://localhost:3000/api",
+  withCredentials: true
+});
 
-export const getTournamentById = async (id) => {
-  return apiRequest(`/tournaments/${id}`, "GET");
-};
+// GET all tournaments
+export async function getTournaments() {
+  const res = await API.get("/tournaments");
+  return res.data;
+}
 
-export const getTournamentGolfers = async (id) => {
-  return apiRequest(`/tournaments/${id}/golfers`, "GET");
-};
+// GET single tournament
+export async function getTournamentById(tournamentId) {
+  const res = await API.get(`/tournaments/${tournamentId}`);
+  return res.data;
+}
+
+// GET tournament field (TournamentEntry)
+export async function getTournamentField(tournamentId) {
+  const res = await API.get(`/tournaments/${tournamentId}/field`);
+  return res.data; // array of TournamentEntry objects
+}
+
+// GET tournament results (TournamentResult)
+export async function getTournamentResults(tournamentId) {
+  const res = await API.get(`/tournaments/${tournamentId}/results`);
+  return res.data;
+}
+

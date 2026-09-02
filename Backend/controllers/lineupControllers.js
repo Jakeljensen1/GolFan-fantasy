@@ -1,16 +1,20 @@
-// src/controllers/lineupController.js
 const Lineup = require('../models/Lineup');
 const Tournament = require('../models/Tournament');
+const validateLineup = require("../utils/validateLineup");
 
 // CREATE lineup
-module.exports.createLineup = async (req, res) => {
+
+exports.createLineup = async (req, res) => {
   try {
-    const { tournament, golfers } = req.body;
+    const { tournamentId, entryIds } = req.body;
+    const userId = req.user._id;
+
+    await validateLineup({ userId, tournamentId, entryIds });
 
     const lineup = await Lineup.create({
-      user: req.user,
-      tournament,
-      golfers
+      user: userId,
+      tournament: tournamentId,
+      entries: entryIds,
     });
 
     res.status(201).json(lineup);
@@ -19,12 +23,21 @@ module.exports.createLineup = async (req, res) => {
   }
 };
 
+
 // GET lineup by ID
 module.exports.getLineup = async (req, res) => {
   try {
-    const lineup = await Lineup.findById(req.params.id)
-      .populate('golfers')
+    const lineup = await Lineup.findOne({
+      _id: req.params.id,
+      user: req.user
+    })
+      .populate({
+        path: "entries",
+        populate: { path: "golferId" }
+      })
       .populate('tournament');
+
+    if (!lineup) return res.status(404).json({ error: "Lineup not found" })
 
     res.json(lineup);
   } catch (err) {
@@ -35,9 +48,12 @@ module.exports.getLineup = async (req, res) => {
 // GET all lineups for logged-in user
 module.exports.getUserLineups = async (req, res) => {
   try {
-    const lineups = await Lineup.find({ user: req.user })
-      .populate('golfers')
-      .populate('tournament');
+    const lineups = await Lineup.find({ user: req.user._id })
+      .populate('tournament')
+      .populate({
+        path: "entries",
+        populate: { path: "golferId" }
+      });
 
     res.json(lineups);
   } catch (err) {
@@ -45,28 +61,4 @@ module.exports.getUserLineups = async (req, res) => {
   }
 };
 
-// COMPUTE lineup score (lower = better)
-module.exports.computeLineupScore = async (req, res) => {
-  try {
-    const lineup = await Lineup.findById(req.params.id);
-    const tournament = await Tournament.findById(lineup.tournament);
 
-    let totalScore = 0;
-
-    lineup.golfers.forEach(golferId => {
-      const scoreEntry = tournament.scores.find(
-        s => s.golfer.toString() === golferId.toString()
-      );
-      if (scoreEntry && scoreEntry.totalScore !== null) {
-        totalScore += scoreEntry.totalScore;
-      }
-    });
-
-    lineup.totalScore = totalScore;
-    await lineup.save();
-
-    res.json({ message: 'Score computed', totalScore });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to compute lineup score' });
-  }
-};

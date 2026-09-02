@@ -1,0 +1,49 @@
+.card {
+  background: white;
+  border: 2px solid var(--golf-green-light);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.selected {
+  background: var(--golf-green-light);
+  color: var(--golf-text-light);
+  border-color: var(--golf-green);
+}
+
+.headshot {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--golf-green);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.country {
+  opacity: 0.85;
+}
+
+.owgr {
+  font-weight: 600;
+  color: var(--golf-green);
+}

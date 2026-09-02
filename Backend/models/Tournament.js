@@ -1,13 +1,23 @@
-// src/models/Tournament.js
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const tournamentSchema = new mongoose.Schema(
   {
+    externalId: {
+      type: String
+    },
     name: {
       type: String,
       required: true,
     },
+    tour: {
+      type: String,
+      required: true,
+    },
     course: {
+      type: String,
+      required: true,
+    },
+    location: {
       type: String,
       required: true,
     },
@@ -19,22 +29,17 @@ const tournamentSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    golfers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Golfer",
-      },
-    ],
-    scores: [
-      {
-        golfer: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Golfer'
-        },
-      }
-    ]
+    status: {
+      type: String, // "upcoming", "in_progress", "completed"
+    },
+    purse: {
+      type: Number
+    },
+    season: {
+      type: Number
+    }
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Tournament", tournamentSchema);
+module.exports = mongoose.model("Tournament", tournamentSchema);

@@ -1,44 +1,64 @@
-//import { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './index.css'
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import DashboardPage from './pages/DashboardPage';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+
+import DashboardPage from "./pages/DashboardPage";
+import TournamentPage from "./pages/TournamentPage";
+import LineupBuilderPage from "./pages/LineupBuilderPage";
+import LineupPage from "./pages/LineupPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 export default function App() {
-  // const [data, setDate] = useState(null);
-  // useEffect(() => {
-  //   fetch('http://localhost:3000/api')
-  //     .then(res => res.json())
-  //     .then(data => console.log(data))
-  //     .catch(err => console.log(err));
-  // })
-
   return (
-    <div>
+    <AuthProvider>
       <BrowserRouter>
-        {/* navbar component + data to be added */}
         <Routes>
+          {/* public */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+
+          {/* protected */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/tournament/:id"
+            element={
+              <ProtectedRoute>
+                <TournamentPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/tournament/:id/build"
+            element={
+              <ProtectedRoute>
+                <LineupBuilderPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/lineup/:id"
+            element={
+              <ProtectedRoute>
+                <LineupPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
-    </div>
-  )
+    </AuthProvider>
+  );
 }
 
-//keep
-// const token = localStorage.getItem('token');
 
-// if (token) {
-//   const res = await fetch('/api/auth/me', {
-//     headers: {
-//       Authorization: `Bearer ${token}`
-//     }
-//   });
-
-//   const user = await res.json();
-//   setUser(user);
-// }
 

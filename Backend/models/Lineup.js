@@ -1,5 +1,5 @@
-// src/models/Lineup.js
-import mongoose from "mongoose";
+
+const mongoose = require('mongoose');
 
 const lineupSchema = new mongoose.Schema(
   {
@@ -13,19 +13,21 @@ const lineupSchema = new mongoose.Schema(
       ref: "Tournament",
       required: true,
     },
-    golfers: [
+    entries: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Golfer",
+        ref: "TournamentEntry",
         required: true,
       },
     ],
     totalScore: {
       type: Number,
-      default: 0, // updated after scoring, reflects the actual score of the golfer, not a points system within golfan
+      default: null, // updated after scoring, reflects the actual score of the golfer, not a points system within golfan
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Lineup", lineupSchema);
+
+
+module.exports = mongoose.model("Lineup", lineupSchema);

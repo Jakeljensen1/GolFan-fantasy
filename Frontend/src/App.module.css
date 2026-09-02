@@ -1,7 +1,54 @@
-.mainContainer {
-  width: 100vw;
-  min-height: 100vh;
-  padding: 20px;
-  color: #ffffff;
-  background-color: #000f1c;
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--golf-green);
+  padding: 16px 24px;
+  border-radius: 12px;
+  color: var(--golf-text-light);
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Tournament / Golfer / Entry Cards */
+.entryCard {
+  background: white;
+  border: 2px solid var(--golf-green-light);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.entryCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.selected {
+  background: var(--golf-green-light);
+  color: var(--golf-text-light);
+  border-color: var(--golf-green);
+}
+
+/* Lineup Card */
+.lineupCard {
+  background: var(--golf-sky);
+  border: 2px solid var(--golf-green-light);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

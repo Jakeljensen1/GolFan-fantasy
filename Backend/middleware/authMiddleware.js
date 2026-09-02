@@ -1,17 +1,10 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 module.exports.authMiddleware = (req, res, next) => {
-  // Expecting: Authorization: Bearer <token>
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Authorization header missing' });
-  }
-
-  const token = authHeader.split(' ')[1]; // get the token part
+  const token = req.cookies.jwt; // read JWT from cookie
 
   if (!token) {
-    return res.status(401).json({ error: 'Token missing' });
+    return res.status(401).json({ error: "Not authorized" });
   }
 
   try {
@@ -19,6 +12,8 @@ module.exports.authMiddleware = (req, res, next) => {
     req.user = decoded.id; // attach user ID to request
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid or expired token' });
+    return res.status(401).json({ error: "Invalid or expired token" });
   }
 };
+
+
