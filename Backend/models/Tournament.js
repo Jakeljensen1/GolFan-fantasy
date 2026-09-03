@@ -35,9 +35,6 @@ const tournamentSchema = new mongoose.Schema(
     purse: {
       type: Number
     },
-    season: {
-      type: Number
-    }
   },
   { timestamps: true }
 );

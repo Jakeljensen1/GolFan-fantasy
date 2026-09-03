@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const golferSchema = new mongoose.Schema(
   {
     externalId: {
-      Type: String
+      type: String
     },
     name: {
       type: String,
@@ -34,9 +34,10 @@ const golferSchema = new mongoose.Schema(
     active: {
       type: Boolean
     },
-    tours: [
-      String // ["PGA", "DPWT"]
-    ]
+    tours: {
+      type: [String], // ["PGA", "DPWT"]
+      default: []
+    }
   }, { timestamps: true }
 );
 
