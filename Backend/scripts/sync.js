@@ -1,11 +1,12 @@
-// scripts/sync.js
+
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const golferSync = require("../services/sync/golferSync");
-const tournamentSync = require("../services/sync/tournamentSync");
-const syncTournamentEntries = require("../services/sync/tournamentEntry");
-const syncTournamentResults = require("../services/sync/tournamentResultSync");
+const golferSync = require("../services/syncEspn/golferSync");
+const tournamentSync = require("../services/syncEspn/tournamentSync");
+const syncTournamentEntries = require("../services/syncEspn/tournamentEntry");
+const syncTournamentResults = require("../services/syncEspn/tournamentResultSync");
+
 const Tournament = require("../models/Tournament");
 
 (async () => {

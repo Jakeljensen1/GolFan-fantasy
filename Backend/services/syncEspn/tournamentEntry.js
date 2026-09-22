@@ -4,8 +4,34 @@ const mapper = require("../providers/mapper");
 const TournamentEntry = require("../../models/TournamentEntry");
 const Golfer = require("../../models/Golfer");
 
+function getCompetitorId(c) {
+  if (c.id) return c.id;
+
+  const ref = c.athlete?.$ref;
+  if (!ref) return null;
+
+  const parts = ref.split("/");
+  return parts[parts.length - 1];
+}
+
 async function syncTournamentEntries(tournament) {
-  const items = await provider.getTournamentField(tournament.externalId);
+  let items;
+
+  try {
+    items = await provider.getTournamentField(tournament.externalId);
+  } catch (err) {
+    if (err.response?.status === 404) {
+      console.log(`Skipping ${tournament.name} — no competitor data available.`);
+      return;
+    }
+    console.error(`Error fetching competitors for ${tournament.name}`, err);
+    return;
+  }
+
+  if (!items || items.length === 0) {
+    console.log(`Skipping ${tournament.name} — competitor list empty.`);
+    return;
+  }
 
   const competitors = [];
   for (const item of items) {
@@ -16,8 +42,10 @@ async function syncTournamentEntries(tournament) {
   const ops = [];
 
   for (const c of competitors) {
-    // ESPN competitor.id is golfer externalId
-    const golfer = await Golfer.findOne({ externalId: c.id });
+    const competitorId = getCompetitorId(c);
+    if (!competitorId) continue;
+
+    const golfer = await Golfer.findOne({ externalId: competitorId });
     if (!golfer) continue;
 
     ops.push({
@@ -42,3 +70,4 @@ async function syncTournamentEntries(tournament) {
 }
 
 module.exports = syncTournamentEntries;
+

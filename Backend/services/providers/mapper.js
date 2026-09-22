@@ -1,5 +1,7 @@
 // Ingestion service must match the corresponding Mongoose schemas
 module.exports = {
+
+  //ESPN mappers
   mapPlayer(p) {
     return {
       externalId: p.id,
@@ -55,6 +57,86 @@ module.exports = {
       totalScore: leader.score ?? null,
       totalToPar: leader.relativeScore ?? null,
       earnings: leader.earnings ?? null
+    };
+  },
+
+  //GolfData Mappers
+  mapGolfDataPlayer(p) {
+    return {
+      externalId: p.id,
+      name: p.fullName,
+      firstName: p.fullName?.split(" ")[0] ?? null,
+      lastName: p.fullName?.split(" ").slice(1).join(" ") ?? null,
+      nationality: p.country ?? null,
+      headshot: p.imageUrl ?? null,
+      dateOfBirth: p.dateOfBirth ?? null,
+      biography: p.biography ?? null,
+    };
+  },
+
+
+  mapGolfDataTournament(t) {
+    return {
+      externalId: t.id,
+      name: t.name,
+      tour: t.tour ?? "PGA",
+      course: t.courseId ?? "Unknown Course",
+      location: t.location ?? "Unknown Location",
+      startDate: t.startDate ? new Date(t.startDate) : null,
+      endDate: t.endDate ? new Date(t.endDate) : null,
+      status: t.status ?? "unknown",
+      purse: t.purseAmount ?? null,
+    };
+  },
+
+  mapGolfDataTournamentEntry(f, tournamentId, golferId) {
+    return {
+      tournamentId,
+      golferId,
+
+      // Field data
+      status: f.removedAt ? "withdrawn" : "active",
+      isAlternate: f.isAlternate ?? false,
+      isAmateur: f.isAmateur ?? false,
+
+      // Tee time info (published later)
+      teeTime: f.scheduledAt ?? null,
+      localTime: f.localTime ?? null,
+      startHole: f.startHole ?? null,
+
+      // Ranking
+      dataGolfRank: f.dataGolfRank ?? null,
+      owgrRank: f.owgrRank ?? null,
+
+      // Scoring fields intentionally left null
+      position: null,
+      round: null,
+      score: null,
+      totalToPar: null,
+      madeCut: null,
+    };
+  },
+
+  mapGolfDataTournamentResult(row, tournamentId, golferId) {
+    return {
+      tournamentId,
+      golferId,
+
+      // Leaderboard fields
+      position: row.position ?? null,
+      positionText: row.positionText ?? null,
+      totalToPar: row.totalToPar ?? null,
+      totalStrokes: row.totalStrokes ?? null,
+      todayToPar: row.todayToPar ?? null,
+      thruHole: row.thruHole ?? null,
+      currentRound: row.currentRound ?? null,
+      status: row.status ?? null,
+
+      // Round-by-round scoring
+      roundStrokes: row.roundStrokes ?? [],
+
+      // Earnings not provided by GolfData leaderboard
+      earnings: null,
     };
   }
 };

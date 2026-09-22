@@ -6,7 +6,9 @@ export default function TournamentCard({ tournament }) {
     <Link to={`/tournament/${tournament._id}`} className={styles.cardLink}>
       <div className={styles.card}>
         <h3 className={styles.name}>{tournament.name}</h3>
-        <p className={styles.course}>{tournament.course}</p>
+        <p className={styles.startData}>{
+          new Date(tournament.startDate).toDateString()
+        }</p>
       </div>
     </Link>
   );

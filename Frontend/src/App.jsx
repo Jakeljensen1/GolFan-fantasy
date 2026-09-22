@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -54,6 +54,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
