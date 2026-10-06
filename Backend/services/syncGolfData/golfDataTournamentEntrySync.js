@@ -1,13 +1,20 @@
-// Backend/services/sync/golfDataTournamentEntrySync.js
+
 const provider = require("../providers/golfDataProvider");
 const mapper = require("../providers/mapper");
 const TournamentEntry = require("../../models/TournamentEntry");
 const Golfer = require("../../models/Golfer");
 
+function extractGolferId(f) {
+  return f.golferId || f.playerId || f.id || null;
+}
+
 async function syncGolfDataTournamentEntries(tournament) {
-  if (tournament.status !== "Upcoming") return;
+  if (tournament.status !== "Scheduled") return;
 
   const field = await provider.getTournamentField(tournament.externalId);
+
+  //console.log("FIELD TYPE:", typeof field, "IS ARRAY:", Array.isArray(field));
+  //console.log("FIELD VALUE:", field);
 
   if (!field || !field.length) {
     console.log(`GolfData: No field for ${tournament.name}`);
@@ -17,8 +24,10 @@ async function syncGolfDataTournamentEntries(tournament) {
   const ops = [];
 
   for (const f of field) {
-    // GolfData uses golferId directly
-    const golfer = await Golfer.findOne({ externalId: f.golferId });
+    const golferId = extractGolferId(f);
+    if (!golferId) continue;
+
+    const golfer = await Golfer.findOne({ externalId: golferId });
     if (!golfer) continue;
 
     ops.push({

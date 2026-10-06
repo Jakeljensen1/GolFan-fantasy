@@ -5,15 +5,20 @@ import { AuthProvider } from "./context/AuthContext";
 import DashboardPage from "./pages/DashboardPage";
 import TournamentPage from "./pages/TournamentPage";
 import LineupBuilderPage from "./pages/LineupBuilderPage";
+import TournamentLeaderboardPage from "./pages/TournamentLeaderboardPage";
 import LineupPage from "./pages/LineupPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import AuthRedirect from "./components/AuthRedirect";
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/*root redirect*/}
+          <Route path="/" element={<AuthRedirect />} />
+
           {/* public */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
@@ -38,6 +43,12 @@ export default function App() {
           />
 
           <Route
+            path="/tournament/:id/leaderboard"
+            element={<TournamentLeaderboardPage />}
+          />
+
+
+          <Route
             path="/tournament/:id/build"
             element={
               <ProtectedRoute>
@@ -54,7 +65,13 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
+          <Route
+            path="/"
+            element={
+              <AuthRedirect />
+            }
+          />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>

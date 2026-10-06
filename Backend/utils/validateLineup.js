@@ -33,10 +33,14 @@ async function validateLineup({ userId, tournamentId, entryIds }) {
   }
 
   // 6. Validate each TournamentEntry
+  // console.log("VALIDATE tournamentId:", tournamentId);
+  // console.log("VALIDATE entryIds:", entryIds);
   const entries = await TournamentEntry.find({
     _id: { $in: entryIds },
     tournamentId: tournamentId,
   });
+  // console.log("FOUND entries:", entries.length);
+  // console.log("ENTRIES:", entries);
 
   if (entries.length !== entryIds.length) {
     throw new Error("One or more selected golfers are not in this tournament.");

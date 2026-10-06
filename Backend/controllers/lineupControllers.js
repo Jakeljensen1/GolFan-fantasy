@@ -6,19 +6,21 @@ const validateLineup = require("../utils/validateLineup");
 
 exports.createLineup = async (req, res) => {
   try {
+    console.log("REQ BODY:", req.body)
     const { tournamentId, entryIds } = req.body;
-    const userId = req.user._id;
+    const userId = req.user;
 
     await validateLineup({ userId, tournamentId, entryIds });
 
     const lineup = await Lineup.create({
       user: userId,
       tournament: tournamentId,
-      entries: entryIds,
+      entries: entryIds
     });
 
     res.status(201).json(lineup);
   } catch (err) {
+    //console.error("LINEUP CREATE ERROR:", err);
     res.status(400).json({ error: err.message });
   }
 };
@@ -48,7 +50,7 @@ module.exports.getLineup = async (req, res) => {
 // GET all lineups for logged-in user
 module.exports.getUserLineups = async (req, res) => {
   try {
-    const lineups = await Lineup.find({ user: req.user._id })
+    const lineups = await Lineup.find({ user: req.user })
       .populate('tournament')
       .populate({
         path: "entries",
@@ -60,5 +62,28 @@ module.exports.getUserLineups = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch user lineups' });
   }
 };
+
+// GET all lineups for a tournament
+module.exports.getTournamentLineups = async (req, res) => {
+  try {
+    const tournamentId = req.params.id;
+
+    const lineups = await Lineup.find({ tournament: tournamentId })
+      .populate('user')
+      .populate({
+        path: "entries",
+        populate: { path: "golferId" }
+      })
+      .populate('tournament');
+
+    //sort
+    lineups.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+
+    res.json(lineups);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch tournament lineups' });
+  }
+};
+
 
 

@@ -28,7 +28,9 @@ const Tournament = require("../models/Tournament");
     console.log("GolfData: Syncing tournament entries...");
     for (const t of tournaments) {
       const start = new Date(t.startDate);
-      if (t.status === "Upcoming" && start <= oneWeekAhead) {
+      //console.log("TOURNAMENT:", t.name, t.status, t.startDate);
+
+      if (t.status === "Scheduled" && start <= oneWeekAhead) {
         await syncTournamentEntries(t);
       }
     }

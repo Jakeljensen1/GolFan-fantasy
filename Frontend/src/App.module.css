@@ -1,16 +1,3 @@
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--golf-green);
-  padding: 16px 24px;
-  border-radius: 12px;
-  color: var(--golf-text-light);
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
 .title {
   font-size: 2rem;
   font-weight: 700;
@@ -51,4 +38,92 @@
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.authContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.authCard {
+  background: var(--golf-sand);
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  margin-bottom: 40px;
+  /* spacing above footer */
+}
+
+.authTitle {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--golf-green-dark);
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.authInput {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid var(--golf-green-light);
+  font-size: 1rem;
+}
+
+.authButton {
+  background: var(--golf-green);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.2s ease;
+}
+
+.authButton:hover {
+  background: var(--golf-green-dark);
+}
+
+.authError {
+  background: #ffdddd;
+  color: #a00;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.authSwitch {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.authLink {
+  color: var(--golf-green-dark);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.authLink:hover {
+  text-decoration: underline;
+}
+
+.noField {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--golf-green-dark);
+  padding: 20px 0;
+  opacity: 0.85;
 }

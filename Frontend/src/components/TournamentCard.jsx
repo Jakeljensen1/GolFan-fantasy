@@ -9,6 +9,10 @@ export default function TournamentCard({ tournament }) {
         <p className={styles.startData}>{
           new Date(tournament.startDate).toDateString()
         }</p>
+        <p style={{ color: tournament.status === "Completed" ? "green" : "black" }}>
+          {tournament.status}
+        </p>
+
       </div>
     </Link>
   );

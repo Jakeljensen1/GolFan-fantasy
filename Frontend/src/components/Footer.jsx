@@ -1,14 +1,17 @@
+import styles from "./Footer.module.css";
+
 export default function Footer() {
   return (
-    <footer className="app-footer">
-      <div className="footer-content">
-        <p className="footer-brand">GolFan</p>
-        <p className="footer-tagline">Play. Predict. Compete.</p>
+    <footer className={styles.appFooter}>
+      <div className={styles.footerContent}>
+        <p className={styles.footerBrand}>GolFan</p>
+        <p className={styles.footerTagline}>Play. Predict. Compete.</p>
       </div>
 
-      <p className="footer-copy">
+      <p className={styles.footerCopy}>
         © {new Date().getFullYear()} GolFan Fantasy Golf
       </p>
     </footer>
   );
 }
+

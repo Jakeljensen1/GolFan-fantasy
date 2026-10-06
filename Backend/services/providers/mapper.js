@@ -67,10 +67,10 @@ module.exports = {
       name: p.fullName,
       firstName: p.fullName?.split(" ")[0] ?? null,
       lastName: p.fullName?.split(" ").slice(1).join(" ") ?? null,
-      nationality: p.country ?? null,
-      headshot: p.imageUrl ?? null,
-      dateOfBirth: p.dateOfBirth ?? null,
-      biography: p.biography ?? null,
+      country: p.country ?? null,
+      imageUrl: p.imageUrl ?? null,
+      dateOfBirth: p.birthPlace ?? null,
+      worldRanking: p.worldRanking ?? null,
     };
   },
 
@@ -96,17 +96,9 @@ module.exports = {
 
       // Field data
       status: f.removedAt ? "withdrawn" : "active",
-      isAlternate: f.isAlternate ?? false,
-      isAmateur: f.isAmateur ?? false,
 
-      // Tee time info (published later)
+      // Tee time info (published ~ 4 days from start)
       teeTime: f.scheduledAt ?? null,
-      localTime: f.localTime ?? null,
-      startHole: f.startHole ?? null,
-
-      // Ranking
-      dataGolfRank: f.dataGolfRank ?? null,
-      owgrRank: f.owgrRank ?? null,
 
       // Scoring fields intentionally left null
       position: null,
@@ -123,20 +115,10 @@ module.exports = {
       golferId,
 
       // Leaderboard fields
-      position: row.position ?? null,
-      positionText: row.positionText ?? null,
+      finalPosition: row.position ?? null,
+      totalScore: row.totalStrokes ?? null,
       totalToPar: row.totalToPar ?? null,
-      totalStrokes: row.totalStrokes ?? null,
-      todayToPar: row.todayToPar ?? null,
-      thruHole: row.thruHole ?? null,
-      currentRound: row.currentRound ?? null,
-      status: row.status ?? null,
-
-      // Round-by-round scoring
-      roundStrokes: row.roundStrokes ?? [],
-
-      // Earnings not provided by GolfData leaderboard
-      earnings: null,
+      earnings: null
     };
   }
 };

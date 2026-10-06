@@ -32,3 +32,9 @@ export async function computeLineupScore(lineupId) {
   return res.data;
 }
 
+// Get all lineups for a tournament
+export async function getTournamentLineups(tournamentId) {
+  const res = await API.get(`/lineups/tournament/${tournamentId}/leaderboard`);
+  return res.data;
+}
+

@@ -3,6 +3,9 @@ import { getTournamentField } from "../services/tournamentService";
 import { createLineup } from "../services/lineupService";
 import { useParams, useNavigate } from "react-router-dom";
 import PlayerCard from "../components/PlayerCard";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 import styles from "../App.module.css";
 
 export default function LineupBuilderPage() {
@@ -41,7 +44,12 @@ export default function LineupBuilderPage() {
 
   return (
     <div className="page">
+      <Header />
       <h1 className={styles.title}>Select 4 Golfers</h1>
+
+      <button disabled={selected.length !== 4} onClick={submit}>
+        Submit Lineup ({selected.length}/4)
+      </button>
 
       <div className={styles.grid}>
         {field.map(entry => (
@@ -54,9 +62,7 @@ export default function LineupBuilderPage() {
         ))}
       </div>
 
-      <button disabled={selected.length !== 4} onClick={submit}>
-        Submit Lineup ({selected.length}/4)
-      </button>
+      <Footer />
     </div>
   );
 }

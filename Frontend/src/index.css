@@ -67,6 +67,7 @@ button {
   font-size: 1rem;
   margin-top: 1rem;
   transition: background 0.2s ease, transform 0.1s ease;
+  margin-bottom: 5px;
 }
 
 button:hover {

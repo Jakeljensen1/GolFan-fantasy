@@ -4,12 +4,25 @@ const mapper = require("../providers/mapper");
 const TournamentResult = require("../../models/TournamentResult");
 const Golfer = require("../../models/Golfer");
 
+function extractGolferId(row) {
+  return (
+    row.golferId ||
+    row.playerId ||
+    row.id ||
+    row.player?.id ||
+    null
+  );
+}
+
 async function syncGolfDataTournamentResults(tournament) {
-  if (!["InProgress", "Completed"].includes(tournament.status)) return;
+  // Allow all GolfData result statuses
+  if (!["InProgress", "Completed", "Final", "Live", "Result"].includes(tournament.status)) {
+    return;
+  }
 
   const leaderboard = await provider.getLeaderboard(tournament.externalId);
 
-  if (!leaderboard || !leaderboard.length) {
+  if (!leaderboard || leaderboard.length === 0) {
     console.log(`GolfData: No leaderboard for ${tournament.name}`);
     return;
   }
@@ -17,7 +30,10 @@ async function syncGolfDataTournamentResults(tournament) {
   const ops = [];
 
   for (const row of leaderboard) {
-    const golfer = await Golfer.findOne({ externalId: row.golferId });
+    const golferId = extractGolferId(row);
+    if (!golferId) continue;
+
+    const golfer = await Golfer.findOne({ externalId: golferId });
     if (!golfer) continue;
 
     ops.push({
@@ -27,7 +43,11 @@ async function syncGolfDataTournamentResults(tournament) {
           golferId: golfer._id,
         },
         update: {
-          $set: mapper.mapGolfDataTournamentResult(row, tournament._id, golfer._id),
+          $set: mapper.mapGolfDataTournamentResult(
+            row,
+            tournament._id,
+            golfer._id
+          ),
         },
         upsert: true,
       },
@@ -36,9 +56,9 @@ async function syncGolfDataTournamentResults(tournament) {
 
   if (ops.length > 0) {
     await TournamentResult.bulkWrite(ops);
+    console.log(`GolfData: Synced ${ops.length} results for ${tournament.name}`);
   }
-
-  console.log(`GolfData: Tournament results synced for ${tournament.name}`);
 }
 
 module.exports = syncGolfDataTournamentResults;
+

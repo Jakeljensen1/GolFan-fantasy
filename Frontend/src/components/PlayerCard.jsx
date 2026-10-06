@@ -15,8 +15,8 @@ export default function PlayerCard({ player, onClick, selected }) {
 
       <div className={styles.info}>
         <h3 className={styles.name}>{player.name}</h3>
-        <p className={styles.country}>{player.countryCode}</p>
-        <p className={styles.owgr}>OWGR: {player.worldRanking}</p>
+        <p className={styles.country}>{player.country}</p>
+        {/* <p className={styles.owgr}>OWGR: {player.worldRanking}</p> */}
       </div>
     </div>
   );

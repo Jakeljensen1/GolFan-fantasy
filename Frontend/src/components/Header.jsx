@@ -1,9 +1,9 @@
-import { logout } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import styles from "./Header.module.css";
 
 export default function Header() {
-  const { user, logout } = useAuth
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,21 +12,27 @@ export default function Header() {
   };
 
   return (
-    <header className="app-header">
-      <div className="header-left">
-        <Link to="/dashboard" className="brand">
+    <header className={styles.header}>
+      {/* Left: Brand */}
+      <div className={styles.brandContainer}>
+        <Link to="/dashboard" className={styles.brand}>
           GolFan
         </Link>
       </div>
 
-      <nav className="header-nav">
-        <Link to="/dashboard">Dashboard</Link>
-        {/* Add more links later: Leaderboard, Profile, etc. */}
-      </nav>
+      {/* Right: Nav Buttons */}
+      <div className={styles.navRight}>
+        <Link to="/dashboard" className={styles.navButtonLink}>
+          Dashboard
+        </Link>
 
-      <button onClick={handleLogout} className="logout-button">
-        Logout
-      </button>
+        <button onClick={handleLogout} className={styles.navButton}>
+          Logout
+        </button>
+      </div>
     </header>
   );
 }
+
+
+
