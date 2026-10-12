@@ -1,0 +1,68 @@
+.page {
+  padding: 2rem;
+}
+
+.headerSection {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.email {
+  color: #666;
+  margin: 0.25rem 0 0;
+}
+
+.statsSection {
+  margin-bottom: 2rem;
+}
+
+.statsGrid {
+  display: flex;
+  gap: 1rem;
+}
+
+.statCard {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  flex: 1;
+  text-align: center;
+  border: 1px solid #e5e5e5;
+}
+
+.statCard h3 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.historySection {
+  margin-top: 2rem;
+}
+
+.historyList {
+  list-style: none;
+  padding: 0;
+}
+
+.historyItem {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e5e5;
+}

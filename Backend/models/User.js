@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
+  },
+  imgUrl: {
+    type: String
   }
 }, { timestamps: true }); //automatically adds created/update at time
 

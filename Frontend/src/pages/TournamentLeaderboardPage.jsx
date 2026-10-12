@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { getTournamentLineups } from "../services/lineupService";
 import UserLineup from "../components/UserLineup";
 import LeaderboardRow from "../components/LeaderboardRow";
+import PlayerCard from "../components/PlayerCard";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -13,13 +14,17 @@ export default function TournamentLeaderboardPage() {
 
   const [userLineup, setUserLineup] = useState(null);
   const [leaderboard, setLeaderboard] = useState([]);
+  const [selectedLineup, setSelectedLineup] = useState(null);
 
   useEffect(() => {
     async function load() {
+      //console.log("Auth user:", user);
+
       const all = await getTournamentLineups(id);
+      //console.log("Lineup users:", all.map(l => l.user._id));
 
       // Find the logged-in user's lineup
-      const mine = all.find(l => l.user._id === user);
+      const mine = all.find(l => l.user._id === user._id);
       setUserLineup(mine);
 
       // Sort all lineups by score
@@ -36,7 +41,7 @@ export default function TournamentLeaderboardPage() {
 
       <h1>Tournament Leaderboard</h1>
 
-      {/* USER LINEUP SECTION */}
+      {/* User Lineup */}
       <div className="section">
         <h2>Your Lineup</h2>
         {userLineup ? (
@@ -46,7 +51,13 @@ export default function TournamentLeaderboardPage() {
         )}
       </div>
 
-      {/* LEADERBOARD SECTION */}
+      {/* Selected Lineup within leaderboard*/}
+      {selectedLineup && (
+        <UserLineup line={selectedLineup} onClose={() => setSelectedLineup(null)} />
+      )}
+
+
+      {/* Leaderboard */}
       <div className="section">
         <h2>Leaderboard</h2>
 
@@ -54,8 +65,12 @@ export default function TournamentLeaderboardPage() {
           <p>Leaderboard Unavailable</p>
         ) : (
           <div className="grid">
-            {leaderboard.map(l => (
-              <LeaderboardRow key={l._id} lineup={l} />
+            {leaderboard.map((l, index) => (
+              <LeaderboardRow
+                key={l._id}
+                lineup={l}
+                rank={index + 1} //ranking
+                onSelect={setSelectedLineup} />
             ))}
           </div>
         )}

@@ -1,18 +1,25 @@
-export default function UserLineup({ lineup }) {
+import PlayerCard from "./PlayerCard";
+import styles from "./UserLineup.module.css";
+
+export default function UserLineup({ lineup, onClose }) {
   if (!lineup) return null;
 
   return (
-    <div className="card">
-      <h3>Your Lineup</h3>
-      <p>Tournament: {lineup.tournament.name}</p>
+    <div className={styles.wrapper}>
+      <p className={styles.tournamentName}>
+        Tournament: {lineup.tournament.name}
+      </p>
 
-      <ul>
-        {lineup.entries.map(e => (
-          <li key={e._id}>
-            {e.golferId.name}
-          </li>
+      <div className={styles.playersGrid}>
+        {lineup.entries.map(entry => (
+          <PlayerCard
+            key={entry._id}
+            player={entry.golferId}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
+
+

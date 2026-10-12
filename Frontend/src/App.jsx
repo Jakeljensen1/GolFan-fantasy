@@ -9,6 +9,7 @@ import TournamentLeaderboardPage from "./pages/TournamentLeaderboardPage";
 import LineupPage from "./pages/LineupPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import ProfilePage from "./pages/ProfilePage"
 import AuthRedirect from "./components/AuthRedirect";
 
 export default function App() {
@@ -29,6 +30,15 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />

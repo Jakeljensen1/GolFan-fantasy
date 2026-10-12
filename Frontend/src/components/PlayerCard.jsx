@@ -1,4 +1,4 @@
-// src/components/PlayerCard.jsx
+
 import styles from "./PlayerCard.module.css";
 
 export default function PlayerCard({ player, onClick, selected }) {

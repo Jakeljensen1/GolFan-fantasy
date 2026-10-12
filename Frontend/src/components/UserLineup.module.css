@@ -1,0 +1,17 @@
+.wrapper {
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.tournamentName {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.playersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
