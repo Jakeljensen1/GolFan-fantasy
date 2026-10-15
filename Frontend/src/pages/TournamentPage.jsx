@@ -52,21 +52,22 @@ export default function TournamentPage() {
         <Leaderboard tournamentId={id} />
       )}
 
-      <div className="section">
-        {field.length === 0 ? (
-          <p className={styles.noField}>Field has not been released.</p>
-        ) : (
-          <div className={styles.grid}>
-            {field.map(entry => (
-              <PlayerCard
-                key={entry._id}
-                player={entry.golferId}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
+      {tournament.status !== "Completed" && (
+        <div className="section">
+          {field.length === 0 ? (
+            <p className={styles.noField}>Field has not been released.</p>
+          ) : (
+            <div className={styles.grid}>
+              {field.map(entry => (
+                <PlayerCard
+                  key={entry._id}
+                  player={entry.golferId}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       <Footer />
     </div >
   );

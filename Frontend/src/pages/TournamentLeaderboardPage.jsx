@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { getTournamentLineups } from "../services/lineupService";
+import { getTournamentLeaderboard, computeLineupScore } from "../services/lineupService";
 import UserLineup from "../components/UserLineup";
 import LeaderboardRow from "../components/LeaderboardRow";
-import PlayerCard from "../components/PlayerCard";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -14,22 +13,45 @@ export default function TournamentLeaderboardPage() {
 
   const [userLineup, setUserLineup] = useState(null);
   const [leaderboard, setLeaderboard] = useState([]);
-  const [selectedLineup, setSelectedLineup] = useState(null);
+  //const [selectedLineup, setSelectedLineup] = useState(null);
 
   useEffect(() => {
+    async function computeAllScores(lineups) {
+      for (const lineup of lineups) {
+        try {
+          await computeLineupScore(lineup._id);
+        } catch (err) {
+          console.error("Failed to compute score for lineup:", lineup._id, err);
+        }
+      }
+    }
+
     async function load() {
-      //console.log("Auth user:", user);
+      const data = await getTournamentLeaderboard(id);
 
-      const all = await getTournamentLineups(id);
-      //console.log("Lineup users:", all.map(l => l.user._id));
+      const all = data.fantasyLeaderboard;
 
-      // Find the logged-in user's lineup
+      await computeAllScores(all); //Compute ALL scores for LeaderboardRow here instead of every Row rendering
+
+      const updated = await getTournamentLeaderboard(id);  // Re-fetch leaderboard after scoring
+
+      // Find logged-in user's lineup
       const mine = all.find(l => l.user._id === user._id);
       setUserLineup(mine);
 
-      // Sort all lineups by score
-      const sorted = [...all].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+      // Sort by totalScore (lower is better)
+      const sorted = [...all].sort((a, b) => (a.totalScore ?? 9999) - (b.totalScore ?? 9999));
       setLeaderboard(sorted);
+    }
+
+    async function computeAllScores(lineups) {
+      for (const lineup of lineups) {
+        try {
+          await computeLineupScore(lineup._id);
+        } catch (err) {
+          console.error("Failed to compute score for lineup:", lineup._id, err);
+        }
+      }
     }
 
     if (user) load();
@@ -51,12 +73,6 @@ export default function TournamentLeaderboardPage() {
         )}
       </div>
 
-      {/* Selected Lineup within leaderboard*/}
-      {selectedLineup && (
-        <UserLineup line={selectedLineup} onClose={() => setSelectedLineup(null)} />
-      )}
-
-
       {/* Leaderboard */}
       <div className="section">
         <h2>Leaderboard</h2>
@@ -69,8 +85,11 @@ export default function TournamentLeaderboardPage() {
               <LeaderboardRow
                 key={l._id}
                 lineup={l}
-                rank={index + 1} //ranking
-                onSelect={setSelectedLineup} />
+                rank={index + 1}
+              //Removed state for selectedLineup and moved to LeaderboardRow component
+              //selected={selectedLineup?._id === l._id}
+              //onSelect={setSelectedLineup}
+              />
             ))}
           </div>
         )}
@@ -80,4 +99,5 @@ export default function TournamentLeaderboardPage() {
     </div>
   );
 }
+
 

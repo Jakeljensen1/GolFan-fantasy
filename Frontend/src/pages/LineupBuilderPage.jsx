@@ -23,20 +23,19 @@ export default function LineupBuilderPage() {
     load();
   }, [id]);
 
-  function toggle(entryId) {
-    if (selected.includes(entryId)) {
-      setSelected(selected.filter(s => s !== entryId));
+  function toggle(golferId) {
+    if (selected.includes(golferId)) {
+      setSelected(selected.filter(s => s !== golferId));
     } else if (selected.length < 4) {
-      setSelected([...selected, entryId]);
+      setSelected([...selected, golferId]);
     }
   }
 
   async function submit() {
     console.log("Submitting:", {
       tournamentId: id,
-      entryIds: selected
+      golferIds: selected
     });
-
 
     const lineup = await createLineup(id, selected);
     navigate(`/lineup/${lineup._id}`);
@@ -54,10 +53,10 @@ export default function LineupBuilderPage() {
       <div className={styles.grid}>
         {field.map(entry => (
           <PlayerCard
-            key={entry._id}
+            key={entry.golferId._id}
             player={entry.golferId}
-            selected={selected.includes(entry._id)}
-            onClick={() => toggle(entry._id)}
+            selected={selected.includes(entry.golferId._id)}
+            onClick={() => toggle(entry.golferId._id)}
           />
         ))}
       </div>
@@ -66,6 +65,7 @@ export default function LineupBuilderPage() {
     </div>
   );
 }
+
 
 
 

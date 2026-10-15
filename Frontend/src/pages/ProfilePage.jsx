@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getUserLineups } from "../services/lineupService";
+import { getUserLineups, computeLineupScore, getTournamentLeaderboard } from "../services/lineupService";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import styles from "./ProfilePage.module.css";
@@ -10,59 +10,87 @@ export default function ProfilePage() {
   const [lineups, setLineups] = useState([]);
   const [stats, setStats] = useState({
     tournamentsPlayed: 0,
-    bestFinish: null,
-    averageScore: null,
+    bestScore: null,
+    bestFinishPlace: null,
   });
+
+  async function computeAllScores(lineups) {
+    for (const lineup of lineups) {
+      try {
+        await computeLineupScore(lineup._id);
+      } catch (err) {
+        console.error("Failed to compute score for lineup:", lineup._id, err);
+      }
+    }
+  }
+
+  async function getFinishPosition(lineup) {
+    const data = await getTournamentLeaderboard(lineup.tournament._id);
+    const leaderboard = data.fantasyLeaderboard;
+
+    const sorted = leaderboard.sort(
+      (a, b) => (a.totalScore ?? 9999) - (b.totalScore ?? 9999)
+    );
+
+    const index = sorted.findIndex(l => l._id === lineup._id);
+    return index + 1;
+  }
+
 
   useEffect(() => {
     async function load() {
       const userLineups = await getUserLineups();
-      setLineups(userLineups);
 
-      computeStats(userLineups);
+      await computeAllScores(userLineups);
+
+      const updatedLineups = await getUserLineups();
+      setLineups(updatedLineups);
+
+      computeStats(updatedLineups);
     }
 
     if (user) load();
   }, [user]);
 
-  function computeStats(lineups) {
+  async function computeStats(lineups) {
     if (!lineups.length) {
       setStats({
         tournamentsPlayed: 0,
-        bestFinish: null,
-        averageScore: null,
+        bestScore: null,
+        bestFinishTournament: null,
+        bestFinishPlace: null,
       });
       return;
     }
 
     const tournamentsPlayed = lineups.length;
 
-    // Best finish = highest score
-    const bestFinish = lineups.reduce((best, l) =>
-      (l.score ?? 0) > (best.score ?? 0) ? l : best
+    // Best score = lowest totalScore
+    const bestLineup = lineups.reduce((best, l) =>
+      (l.totalScore ?? 9999) < (best.totalScore ?? 9999) ? l : best
     );
 
-    // Average score
-    const averageScore =
-      lineups.reduce((sum, l) => sum + (l.score ?? 0), 0) / lineups.length;
+    const bestScore = bestLineup.totalScore ?? null;
+    const bestFinishTournament = bestLineup.tournament?.name ?? null;
+
+    // NEW: compute best finish place
+    const bestFinishPlace = await getFinishPosition(bestLineup);
 
     setStats({
       tournamentsPlayed,
-      bestFinish,
-      averageScore: averageScore.toFixed(1),
+      bestScore,
+      bestFinishTournament,
+      bestFinishPlace,
     });
   }
+
 
   return (
     <div className={styles.page}>
       <Header />
-      <div className={styles.headerSection}>
-        <img
-          src={user.imgUrl}
-          alt={user.name}
-          className={styles.avatar}
-        />
 
+      <div className={styles.headerSection}>
+        <img src={user.imgUrl} alt={user.name} className={styles.avatar} />
         <div>
           <h1 className={styles.name}>{user.name}</h1>
           <p className={styles.email}>{user.email}</p>
@@ -79,13 +107,13 @@ export default function ProfilePage() {
           </div>
 
           <div className={styles.statCard}>
-            <h3>{stats.bestFinish ? stats.bestFinish.score : "-"}</h3>
+            <h3>{stats.bestScore ?? "-"}</h3>
             <p>Best Score</p>
           </div>
 
           <div className={styles.statCard}>
-            <h3>{stats.averageScore || "-"}</h3>
-            <p>Average Score</p>
+            <h3>{stats.bestFinishPlace || "-"}</h3>
+            <p>Best Finish (Place)</p>
           </div>
         </div>
       </div>
@@ -101,14 +129,17 @@ export default function ProfilePage() {
               <li key={l._id} className={styles.historyItem}>
                 <div>
                   <strong>{l.tournament.name}</strong>
-                  <p>Score: {l.score ?? 0}</p>
+                  <p>Score: {l.totalScore ?? 0}</p>
                 </div>
               </li>
             ))}
           </ul>
         )}
       </div>
+
       <Footer />
     </div>
   );
 }
+
+

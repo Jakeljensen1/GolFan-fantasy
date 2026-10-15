@@ -6,10 +6,10 @@ const API = axios.create({
 });
 
 // CREATE lineup
-export async function createLineup(tournamentId, entryIds) {
+export async function createLineup(tournamentId, golferIds) {
   const res = await API.post("/lineups", {
     tournamentId,
-    entryIds
+    golferIds
   });
   return res.data;
 }
@@ -33,7 +33,7 @@ export async function computeLineupScore(lineupId) {
 }
 
 // Get all lineups for a tournament
-export async function getTournamentLineups(tournamentId) {
+export async function getTournamentLeaderboard(tournamentId) {
   const res = await API.get(`/lineups/tournament/${tournamentId}/leaderboard`);
   return res.data;
 }

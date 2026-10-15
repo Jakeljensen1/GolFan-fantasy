@@ -1,89 +1,111 @@
 const Lineup = require('../models/Lineup');
 const Tournament = require('../models/Tournament');
+const TournamentResult = require("../models/TournamentResult");
 const validateLineup = require("../utils/validateLineup");
 
 // CREATE lineup
-
 exports.createLineup = async (req, res) => {
   try {
-    console.log("REQ BODY:", req.body)
-    const { tournamentId, entryIds } = req.body;
+    const { tournamentId, golferIds } = req.body;
     const userId = req.user;
 
-    await validateLineup({ userId, tournamentId, entryIds });
+    await validateLineup({ userId, tournamentId, golferIds });
 
     const lineup = await Lineup.create({
       user: userId,
       tournament: tournamentId,
-      entries: entryIds
+      golfers: golferIds
     });
 
     res.status(201).json(lineup);
   } catch (err) {
-    //console.error("LINEUP CREATE ERROR:", err);
     res.status(400).json({ error: err.message });
   }
 };
 
-
 // GET lineup by ID
-module.exports.getLineup = async (req, res) => {
+exports.getLineup = async (req, res) => {
   try {
     const lineup = await Lineup.findOne({
       _id: req.params.id,
       user: req.user
     })
-      .populate({
-        path: "entries",
-        populate: { path: "golferId" }
-      })
-      .populate('tournament');
+      .populate("golfers")
+      .populate("tournament");
 
-    if (!lineup) return res.status(404).json({ error: "Lineup not found" })
+    if (!lineup) return res.status(404).json({ error: "Lineup not found" });
 
     res.json(lineup);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch lineup' });
+    res.status(500).json({ error: "Failed to fetch lineup" });
   }
 };
 
 // GET all lineups for logged-in user
-module.exports.getUserLineups = async (req, res) => {
+exports.getUserLineups = async (req, res) => {
   try {
     const lineups = await Lineup.find({ user: req.user })
-      .populate('tournament')
-      .populate({
-        path: "entries",
-        populate: { path: "golferId" }
-      });
+      .populate("tournament")
+      .populate("golfers");
 
     res.json(lineups);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch user lineups' });
+    res.status(500).json({ error: "Failed to fetch user lineups" });
   }
 };
 
 // GET all lineups for a tournament
-module.exports.getTournamentLineups = async (req, res) => {
+exports.getTournamentLineups = async (req, res) => {
   try {
     const tournamentId = req.params.id;
 
     const lineups = await Lineup.find({ tournament: tournamentId })
-      .populate('user')
-      .populate({
-        path: "entries",
-        populate: { path: "golferId" }
-      })
-      .populate('tournament');
+      .populate("user")
+      .populate("golfers")
+      .populate("tournament");
 
-    //sort
-    lineups.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+    // Sort by totalScore (lower is better)
+    lineups.sort((a, b) => (a.totalScore ?? 9999) - (b.totalScore ?? 9999));
 
     res.json(lineups);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch tournament lineups' });
+    console.error("TOURNAMENT LINEUPS ERROR:", err);
+    res.status(500).json({ error: "Failed to fetch tournament lineups" });
   }
 };
+
+// GET fantasy leaderboard for a tournament
+exports.getFantasyLeaderboard = async (req, res) => {
+  try {
+    const tournamentId = req.params.id;
+
+    const tournament = await Tournament.findById(tournamentId);
+    if (!tournament) {
+      return res.status(404).json({ error: "Tournament not found" });
+    }
+
+    const lineups = await Lineup.find({ tournament: tournamentId })
+      .populate("user")
+      .populate("golfers")
+      .populate("tournament")
+      .sort({ totalScore: 1 }); // lower score = better
+
+    const results = await TournamentResult.find({
+      tournamentId
+    }).populate("golferId");
+
+    res.json({
+      tournament,
+      fantasyLeaderboard: lineups,
+      tournamentResults: results
+    });
+
+  } catch (err) {
+    console.error("LEADERBOARD ERROR:", err);
+    res.status(500).json({ error: "Failed to load fantasy leaderboard" });
+  }
+};
+
 
 
 

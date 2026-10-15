@@ -1,5 +1,5 @@
 .appFooter {
-  margin-top: 20px;
+  margin-top: 50px;
   /* space above footer */
   padding: 20px;
   text-align: center;
@@ -8,7 +8,7 @@
   border-top: 3px solid var(--golf-green-light);
   color: var(--golf-rough);
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
-  margin-top: auto;
+
   /* push footer to bottom */
 }
 

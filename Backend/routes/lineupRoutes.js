@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/', authMiddleware, lineupController.createLineup);
 router.get('/user/all', authMiddleware, lineupController.getUserLineups);
-router.get('/tournament/:id/leaderboard', authMiddleware, lineupController.getTournamentLineups);
+router.get('/tournament/:id/leaderboard', authMiddleware, lineupController.getFantasyLeaderboard);
 router.get('/:id', authMiddleware, lineupController.getLineup);
 router.post('/:id/compute-score', authMiddleware, scoringController.computeLineupScore);
 

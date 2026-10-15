@@ -2,15 +2,15 @@ const Lineup = require("../models/Lineup");
 const Tournament = require("../models/Tournament");
 const TournamentEntry = require("../models/TournamentEntry");
 
-async function validateLineup({ userId, tournamentId, entryIds }) {
+async function validateLineup({ userId, tournamentId, golferIds }) {
   // 1. Must select exactly 4 golfers
-  if (entryIds.length !== 4) {
+  if (golferIds.length !== 4) {
     throw new Error("A lineup must contain exactly 4 golfers.");
   }
 
   // 2. No duplicates
-  const unique = new Set(entryIds);
-  if (unique.size !== entryIds.length) {
+  const unique = new Set(golferIds);
+  if (unique.size !== golferIds.length) {
     throw new Error("Duplicate golfers are not allowed.");
   }
 
@@ -32,17 +32,13 @@ async function validateLineup({ userId, tournamentId, entryIds }) {
     throw new Error("You have already submitted a lineup for this tournament.");
   }
 
-  // 6. Validate each TournamentEntry
-  // console.log("VALIDATE tournamentId:", tournamentId);
-  // console.log("VALIDATE entryIds:", entryIds);
+  // 6. Validate golfers are in this tournament
   const entries = await TournamentEntry.find({
-    _id: { $in: entryIds },
-    tournamentId: tournamentId,
+    tournamentId,
+    golferId: { $in: golferIds }
   });
-  // console.log("FOUND entries:", entries.length);
-  // console.log("ENTRIES:", entries);
 
-  if (entries.length !== entryIds.length) {
+  if (entries.length !== golferIds.length) {
     throw new Error("One or more selected golfers are not in this tournament.");
   }
 
@@ -54,7 +50,6 @@ async function validateLineup({ userId, tournamentId, entryIds }) {
   }
 
   // 8. Alternates allowed only before start
-  // (If you track alternates via entry.status === "alternate")
   for (const entry of entries) {
     if (entry.status === "alternate" && now >= tournament.startDate) {
       throw new Error("Alternates cannot be selected after the tournament starts.");
@@ -65,3 +60,5 @@ async function validateLineup({ userId, tournamentId, entryIds }) {
 }
 
 module.exports = validateLineup;
+
+

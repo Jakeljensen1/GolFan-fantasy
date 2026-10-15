@@ -1,48 +1,94 @@
+/* Wrapper */
+.wrapper {
+  width: 100%;
+}
+
+/* Main row */
 .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 28px 36px 1fr auto;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  background: #ffffff;
-  border-radius: 8px;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #afafaf;
   cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  border: 1px solid #e5e5e5;
+  transition: background 0.15s ease;
 }
 
 .row:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  background: #f7f7f7;
 }
 
+.selectedRow {
+  background: #f0f0f0;
+}
+
+/* Rank */
 .rank {
-  font-size: 1.25rem;
-  font-weight: 700;
-  width: 32px;
+  font-size: 14px;
+  font-weight: 600;
   text-align: center;
-  color: #333;
 }
 
+/* User avatar */
 .avatar {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-}
-
+/* User name */
 .name {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
 }
 
+/* Score */
 .score {
-  font-size: 0.9rem;
-  color: #555;
-  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  padding-right: 10px;
+}
+
+/* Dropdown */
+.dropdown {
+  background: #fafafa;
+  padding: 6px 12px;
+  border-left: 3px solid #ddd;
+  border-bottom: 1px solid #e5e5e5;
+  animation: slideDown 0.15s ease-out;
+}
+
+/* Dropdown golfer rows */
+.golferRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.golferAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.golferName {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

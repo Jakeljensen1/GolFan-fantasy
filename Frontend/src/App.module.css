@@ -120,6 +120,11 @@
   text-decoration: underline;
 }
 
+.cardLink {
+  color: rgb(0, 0, 0);
+  font-size: 1.2rem;
+}
+
 .noField {
   text-align: center;
   font-size: 1.2rem;

@@ -29,7 +29,10 @@ exports.getTournamentField = async (req, res) => {
   try {
     const entries = await TournamentEntry.find({
       tournamentId: req.params.id
-    }).populate("golferId");
+    })
+      .populate("golferId")
+      .sort({ "golferId.name": 1 });
+
 
     res.json(entries);
   } catch (err) {
