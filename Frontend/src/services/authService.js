@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true
 });
+
 
 export async function signup(name, email, password) {
   const res = await API.post("/auth/signup", { name, email, password });
