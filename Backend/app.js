@@ -19,7 +19,14 @@ const port = 3000
 // this if we need to serve pbulic files 
 
 //Middleware
-app.use(cors({ origin: 'http://localhost:5173', credentials: true })); // Vite default port 5173
+app.use(cors({
+  origin: [
+    'http://localhost:5173',// Vite default port 5173
+    'https://golfan-fantasy-1.onrender.com'
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // instead of express-body-parser

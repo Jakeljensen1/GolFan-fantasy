@@ -28,10 +28,10 @@ export default function LineupPage() {
       <div className="section">
         <h2>Your Golfers</h2>
         <div className={styles.grid}>
-          {lineup.entries.map(entry => (
+          {lineup.golfers.map(player => (
             <PlayerCard
-              key={entry._id}
-              player={entry.golferId}
+              key={player._id}
+              player={player.golferId}
             />
           ))}
         </div>

@@ -18,10 +18,12 @@ export default function DashboardPage() {
     async function load() {
 
       const l = await getUserLineups();
-      setLineups(l);
+      setLineups(Array.isArray(l) ? l : []);
+
 
       const t = await getTournaments();
-      setTournaments(t);
+      setTournaments(Array.isArray(t) ? t : []);
+
     }
 
     load();

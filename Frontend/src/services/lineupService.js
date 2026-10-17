@@ -22,9 +22,15 @@ export async function getLineup(lineupId) {
 
 // GET all lineups for logged-in user
 export async function getUserLineups() {
-  const res = await API.get("/lineups/user/all");
-  return res.data;
+  try {
+    const res = await API.get("/lineups/user/all");
+    return res.data;
+  } catch (err) {
+    console.error("getUserLineups error:", err);
+    return []; // prevent crashes
+  }
 }
+
 
 // Compute score for a lineup
 export async function computeLineupScore(lineupId) {
