@@ -21,7 +21,7 @@ const port = 3000
 //Middleware
 app.use(cors({
   origin: [
-    'http://localhost:5173',// Vite default port 5173
+    //'http://localhost:5173', Vite default port 5173, no longer needed in production
     'https://golfan-fantasy-1.onrender.com'
   ],
   credentials: true

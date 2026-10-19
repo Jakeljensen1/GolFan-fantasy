@@ -41,8 +41,9 @@ module.exports.signup_post = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: false, // true in production with HTTPS
-      sameSite: "lax"
+      secure: true, //secure
+      sameSite: "none", // cross-site
+      path: "/" //global
     });
 
     res.status(201).json({
@@ -69,8 +70,9 @@ module.exports.login_post = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax"
+      secure: true,
+      sameSite: "none",
+      path: "/"
     });
 
     res.status(200).json({
@@ -102,8 +104,9 @@ module.exports.user_get = async (req, res) => {
 module.exports.logout_post = (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
+    path: "/",
     expires: new Date(0)
   });
 
